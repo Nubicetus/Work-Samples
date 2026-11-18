@@ -1,4 +1,4 @@
-/* Solenne Rise - work sample. Quiz, sticky mobile bar, spin wheel (article) and bundles/promo (offer page). */
+/* Solenne Rise - work sample. Quiz, sticky mobile bar, exit-intent popup (article) and bundles/promo (offer page). */
 (function () {
   'use strict';
 
@@ -64,73 +64,55 @@
     }).observe(hero);
   }
 
-  /* ---------- Spin wheel ---------- */
-  var modal = $('#wheel');
+  /* ---------- Exit-intent popup ---------- */
+  /* Desktop: opens when the mouse leaves through the top of the window (toward the tabs or close button).
+     Mobile: opens when the reader scrolls back up fast after reading at least 30% of the page.
+     Shows once per visit. Demo link: index.html#exit opens it right away. */
+  var modal = $('#exit');
   if (modal) {
-    var prizes = [10, 15, 20, 10, 15, 25];
-    var colors = ['#ff8a3d', '#1b1b1e', '#e5651f', '#1b1b1e', '#ff8a3d', '#26262a'];
-    var ink = ['#140a03', '#ecebe7', '#140a03', '#ecebe7', '#140a03', '#ecebe7'];
-    var svg = $('svg', modal), seg = 360 / prizes.length, html = '';
-    var pt = function (deg, r) { var a = (deg - 90) * Math.PI / 180; return [100 + r * Math.cos(a), 100 + r * Math.sin(a)]; };
-    prizes.forEach(function (p, i) {
-      var s = pt(i * seg, 96), e = pt((i + 1) * seg, 96), mid = i * seg + seg / 2, t = pt(mid, 64);
-      html += '<path d="M100 100 L' + s[0] + ' ' + s[1] + ' A96 96 0 0 1 ' + e[0] + ' ' + e[1] + ' Z" fill="' + colors[i] + '"/>';
-      html += '<text x="' + t[0] + '" y="' + t[1] + '" fill="' + ink[i] + '" font-family="Archivo, Arial, sans-serif" font-weight="600" font-size="16" text-anchor="middle" dominant-baseline="middle" transform="rotate(' + (mid > 90 && mid < 270 ? mid + 180 : mid) + ' ' + t[0] + ' ' + t[1] + ')">' + p + '%</text>';
-    });
-    html += '<circle cx="100" cy="100" r="96.5" fill="none" stroke="#3a3a3f" stroke-width="1"/><circle cx="100" cy="100" r="14" fill="#0b0b0c" stroke="#3a3a3f"/><circle cx="100" cy="100" r="4" fill="#ff8a3d"/>';
-    svg.innerHTML = html;
-
     var shown = false;
-    var open = function () {
-      if (shown || store.get('wheelSeen')) { return; }
+    var open = function (force) {
+      if (shown || (!force && store.get('exitSeen'))) { return; }
       shown = true;
-      store.set('wheelSeen', '1');
+      store.set('exitSeen', '1');
       modal.classList.add('open');
-      $('.spin-btn', modal).focus();
+      $('.step-email input', modal).focus();
     };
     var close = function () { modal.classList.remove('open'); };
 
-    setTimeout(open, 20000);
-    if (location.hash === '#spin') { open(); } /* demo link: index.html#spin opens the wheel right away */
+    if (location.hash === '#exit') { open(true); }
     document.addEventListener('mouseout', function (e) { if (!e.relatedTarget && e.clientY <= 0) { open(); } });
+
+    var lastY = window.scrollY, lastT = Date.now();
+    window.addEventListener('scroll', function () {
+      var y = window.scrollY, t = Date.now();
+      var read = y / Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      var speed = (lastY - y) / Math.max(1, t - lastT); /* px per ms, positive = scrolling up */
+      if (read > 0.3 && speed > 1.2 && lastY - y > 60) { open(); }
+      lastY = y; lastT = t;
+    }, { passive: true });
+
     $('.close', modal).addEventListener('click', close);
+    $('.no-thanks', modal).addEventListener('click', close);
     modal.addEventListener('click', function (e) { if (e.target === modal) { close(); } });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { close(); } });
 
-    /* Flow: 1) spin  2) show the prize and ask for an email  3) show the code + checkout link */
+    /* Flow: 1) ask for an email  2) show the code, a 15-minute hold timer and the checkout link */
     var show = function (name) {
       modal.querySelectorAll('.step').forEach(function (s) { s.classList.toggle('show', s.classList.contains('step-' + name)); });
     };
-    var code = '';
-
-    $('.spin-btn', modal).addEventListener('click', function () {
-      var btn = this;
-      btn.disabled = true;
-      btn.textContent = 'Spinning...';
-      var win = Math.floor(Math.random() * prizes.length);
-      var stop = 360 * 6 + (360 - (win * seg + seg / 2)) + (Math.random() * 20 - 10);
-      svg.style.transform = 'rotate(' + stop + 'deg)';
-      var finished = false;
-      var done = function () {
-        if (finished) { return; }
-        finished = true;
-        code = 'RISE' + prizes[win];
-        $('.won-pct', modal).textContent = prizes[win] + '%';
-        show('email');
-        $('.step-email input', modal).focus();
-      };
-      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (reduced) { done(); } else { svg.addEventListener('transitionend', done, { once: true }); setTimeout(done, 4600); }
-    });
-
     $('.step-email', modal).addEventListener('submit', function (e) {
       e.preventDefault();
       var email = $('.step-email input', modal).value.trim();
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { $('.err', modal).textContent = 'Please enter a valid email.'; return; }
       $('.err', modal).textContent = '';
-      $('.code-text', modal).textContent = code;
-      $('.code-link', modal).href = 'Offer.html?code=' + code;
       show('code');
+      var left = 15 * 60, hold = $('.hold', modal);
+      var tick = setInterval(function () {
+        left = Math.max(0, left - 1);
+        hold.textContent = Math.floor(left / 60) + ':' + ('0' + left % 60).slice(-2);
+        if (!left) { clearInterval(tick); }
+      }, 1000);
     });
   }
 
