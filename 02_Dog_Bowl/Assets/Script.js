@@ -1,4 +1,4 @@
-/* Pace Maze Bowl - work sample 2. Sticky bar, spin wheel (no email), offer page bundles/promo. */
+/* Pace Maze Bowl, rebuild. Sticky bar, spin wheel (no email), offer page bundles and promo. */
 (function () {
   'use strict';
 
@@ -21,16 +21,17 @@
   /* ---------- Spin wheel: spin, then straight to checkout (no email) ---------- */
   var modal = $('#wheel');
   if (modal) {
+    var INK = '#17212B';
     var prizes = [10, 15, 20, 10, 15, 25];
-    var colors = ['#fbe7a1', '#c9def7', '#f9cfd9', '#bfe3c8', '#ddd3fb', '#ffffff'];
+    var colors = ['#D8E34A', '#FFFFFF', '#C3CBD3', '#D8E34A', '#FFFFFF', '#C3CBD3'];
     var svg = $('svg', modal), seg = 360 / prizes.length, html = '';
     var pt = function (deg, r) { var a = (deg - 90) * Math.PI / 180; return [100 + r * Math.cos(a), 100 + r * Math.sin(a)]; };
     prizes.forEach(function (p, i) {
       var s = pt(i * seg, 96), e = pt((i + 1) * seg, 96), mid = i * seg + seg / 2, t = pt(mid, 64);
-      html += '<path d="M100 100 L' + s[0] + ' ' + s[1] + ' A96 96 0 0 1 ' + e[0] + ' ' + e[1] + ' Z" fill="' + colors[i] + '" stroke="#111" stroke-width="1.5"/>';
-      html += '<text x="' + t[0] + '" y="' + t[1] + '" fill="#111" font-family="Bricolage Grotesque, Arial Black, sans-serif" font-weight="800" font-size="18" text-anchor="middle" dominant-baseline="middle" transform="rotate(' + (mid > 90 && mid < 270 ? mid + 180 : mid) + ' ' + t[0] + ' ' + t[1] + ')">' + p + '%</text>';
+      html += '<path d="M100 100 L' + s[0] + ' ' + s[1] + ' A96 96 0 0 1 ' + e[0] + ' ' + e[1] + ' Z" fill="' + colors[i] + '" stroke="' + INK + '" stroke-width="1.5"/>';
+      html += '<text x="' + t[0] + '" y="' + t[1] + '" fill="' + INK + '" font-family="Schibsted Grotesk, Arial Black, sans-serif" font-weight="900" font-size="18" text-anchor="middle" dominant-baseline="middle" transform="rotate(' + (mid > 90 && mid < 270 ? mid + 180 : mid) + ' ' + t[0] + ' ' + t[1] + ')">' + p + '%</text>';
     });
-    html += '<circle cx="100" cy="100" r="97" fill="none" stroke="#111" stroke-width="2"/><circle cx="100" cy="100" r="13" fill="#fff" stroke="#111" stroke-width="2"/>';
+    html += '<circle cx="100" cy="100" r="97" fill="none" stroke="' + INK + '" stroke-width="2"/><circle cx="100" cy="100" r="13" fill="' + INK + '"/>';
     svg.innerHTML = html;
 
     var shown = false;

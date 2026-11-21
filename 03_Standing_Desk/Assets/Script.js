@@ -1,4 +1,4 @@
-/* Kinlo Rise Desk - work sample 3. No popups: standing calculator (article) and options/promo (offer page). */
+/* Kinlo Rise Desk - work sample 3 (rebuild). No popups: week-bar calculator and offer page options/promo. */
 (function () {
   'use strict';
 
@@ -11,8 +11,7 @@
     var days = $('#days');
     var hm = function (m) { var h = Math.floor(m / 60), r = Math.round(m % 60); return h + 'h ' + (r < 10 ? '0' : '') + r + 'm'; };
     var calc = function () {
-      var m = +mins.value, d = +days.value;
-      var week = m * d;
+      var m = +mins.value, d = +days.value, week = m * d;
       $('#mins-out').textContent = m + ' min';
       $('#days-out').textContent = d;
       $('#r-week').textContent = hm(week);

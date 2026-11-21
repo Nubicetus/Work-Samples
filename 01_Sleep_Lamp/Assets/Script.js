@@ -1,4 +1,4 @@
-/* Solenne Rise - work sample. Quiz, sticky mobile bar, exit-intent popup (article) and bundles/promo (offer page). */
+﻿/* Solenne Rise - work sample. Quiz, sticky mobile bar, exit-intent popup (article) and bundles/promo (offer page). */
 (function () {
   'use strict';
 
@@ -132,8 +132,8 @@
     };
     var apply = function (raw) {
       var c = (raw || '').trim().toUpperCase();
-      if (CODES[c]) { pct = CODES[c]; $('.promo-msg').textContent = c + ' applied: ' + pct + '% off.'; $('.promo-msg').style.color = '#2f7a4b'; }
-      else if (c) { pct = 0; $('.promo-msg').textContent = 'That code is not valid.'; $('.promo-msg').style.color = '#b3392f'; }
+      if (CODES[c]) { pct = CODES[c]; $('.promo-msg').textContent = c + ' applied: ' + pct + '% off.'; $('.promo-msg').style.color = '#8fd4a8'; }
+      else if (c) { pct = 0; $('.promo-msg').textContent = 'That code is not valid.'; $('.promo-msg').style.color = '#ff9a8f'; }
       update();
     };
     offer.querySelectorAll('input[name=bundle]').forEach(function (r) { r.addEventListener('change', update); });
