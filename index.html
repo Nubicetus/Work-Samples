@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Work Samples - E. Jethro Limarag</title>
+<meta name="description" content="Advertorial landing page samples for fictional brands, built for native ad campaigns on desktop and mobile.">
+<meta name="theme-color" content="#0f1215">
+<link rel="icon" href="Nubicetus_Avatar.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Outfit:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  /* Slate and teal, from my Obsidian theme (Slate_Teal.css); card and border roles follow the ui-ux-pro-max slate palette. */
+  :root {
+    --night: #0f1215; --win: #1b2128; --win-2: #15191e; --card: #232b34; --line: #2a313a; --line-2: #3a4552;
+    --text: #e6e9ed; --muted: #aab4bf; --faint: #8a96a3;
+    --teal: #3fd0bf; --teal-d: #24a596; --teal-deep: #1f8f84; --on-teal: #0f1215;
+    --display: "Outfit", "DM Sans", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    --sans: "DM Sans", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    --ease: cubic-bezier(.2, .7, .2, 1);
+    --gap: clamp(12px, 2vw, 40px);      /* space around the window */
+    --side: clamp(17rem, 22vw, 25rem);  /* width of the left column */
+  }
+  /* Sizes are in rem. The root size follows the window width a little, so browser zoom changes the page less. */
+  html { font-size: clamp(13px, calc(.5vw + 8px), 21px); height: 100%; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; height: 100vh; height: 100dvh; overflow: hidden; display: grid; place-items: center;
+    background: var(--night); color: var(--text); font: 1rem/1.55 var(--sans); -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+
+  .backdrop {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(1.5px 1.5px at 6% 14%, #cbd5e1 60%, transparent),
+      radial-gradient(1px 1px at 14% 80%, #94a3b8 60%, transparent),
+      radial-gradient(1.5px 1.5px at 24% 6%, #94a3b8 60%, transparent),
+      radial-gradient(1px 1px at 33% 93%, #cbd5e1 60%, transparent),
+      radial-gradient(1.5px 1.5px at 47% 3%, #cbd5e1 60%, transparent),
+      radial-gradient(1px 1px at 55% 96%, #94a3b8 60%, transparent),
+      radial-gradient(1.5px 1.5px at 68% 4%, #94a3b8 60%, transparent),
+      radial-gradient(1px 1px at 77% 95%, #cbd5e1 60%, transparent),
+      radial-gradient(1.5px 1.5px at 90% 7%, #cbd5e1 60%, transparent),
+      radial-gradient(1px 1px at 97% 78%, #94a3b8 60%, transparent),
+      radial-gradient(1px 1px at 2% 50%, #cbd5e1 60%, transparent),
+      radial-gradient(60% 55% at 50% 55%, rgba(36, 165, 150, .2), transparent 70%),
+      var(--night);
+  }
+
+  @keyframes winIn { from { opacity: 0; transform: translateY(1.5rem) scale(.97); } }
+  @keyframes cardIn { from { opacity: 0; transform: translateY(1.9rem); } }
+
+  /* The floating window: almost the whole screen */
+  .window {
+    position: relative; z-index: 1; overflow: hidden; display: grid; grid-template-rows: 2.75rem minmax(0, 1fr);
+    width: calc(100vw - 2 * var(--gap)); max-width: 2300px;
+    /* Compact on the home screen; grows to nearly the full screen while a sample is open */
+    height: min(calc(100vh - 2 * var(--gap)), max(44rem, var(--need, 0px))); height: min(calc(100dvh - 2 * var(--gap)), max(44rem, var(--need, 0px)));
+    transition: height .6s var(--ease);
+    background: var(--win); border-radius: 1.25rem; border: 1px solid var(--line-2);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, .03), 0 3rem 7rem -1.5rem rgba(0, 0, 0, .8), 0 .8rem 2rem rgba(0, 0, 0, .5);
+    animation: winIn .8s var(--ease) backwards;
+  }
+
+  body.sample-open .window { height: calc(100vh - 2 * var(--gap)); height: calc(100dvh - 2 * var(--gap)); }
+
+  .chrome { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 1.1rem; background: var(--win-2); border-bottom: 1px solid var(--line); font-size: .82rem; color: var(--faint); }
+  .dots { display: flex; gap: .45rem; }
+  .dots i { width: .7rem; height: .7rem; border-radius: 50%; background: var(--line-2); }
+  .chrome .title { font-weight: 500; letter-spacing: .03em; }
+  .chrome a { justify-self: end; text-decoration: none; font-weight: 700; color: var(--teal); }
+  .chrome a:hover { text-decoration: underline; }
+
+  .body { display: grid; grid-template-columns: var(--side) minmax(0, 1fr); min-height: 0; }
+
+  /* Left column: me */
+  .side { display: flex; flex-direction: column; gap: .8rem; padding: 1.9rem 2.1rem 1.5rem; border-right: 1px solid var(--line); overflow-y: auto; scrollbar-width: thin; }
+  .side img { width: 3.9rem; height: 3.9rem; border-radius: 50%; image-rendering: pixelated; border: 2px solid var(--line-2); margin-bottom: .7rem; display: block; }
+  .kicker { margin: 0; font-size: .75rem; letter-spacing: .18em; text-transform: uppercase; color: var(--teal); font-weight: 700; }
+  .side h1 { margin: .3rem 0 0; font: 600 2.2rem/1.1 var(--display); letter-spacing: -.02em; }
+  .side .role { margin: .55rem 0 0; color: var(--teal); font-size: .95rem; font-weight: 500; }
+  .side .intro-text { margin: .2rem 0 0; color: var(--muted); line-height: 1.55; }
+  /* What I Do: centred in the free space, no lines */
+  .list { margin: auto 0; padding: .5rem 0; list-style: none; text-align: center; }
+  .list li { padding: .28rem 0; font-size: .98rem; }
+  .list .kicker { margin-bottom: .4rem; }
+  /* The teal bar marks the fine print, like an asterisk for a disclosure */
+  .fine { margin: 0; padding-left: .9rem; border-left: 2px solid var(--teal-d); font-size: .8rem; line-height: 1.5; color: var(--faint); }
+  .side .fine { margin-top: auto; }
+
+  /* Cards on a dotted canvas. The row drifts on its own and loops (the script repeats the set). */
+  .stage { position: relative; container-type: size; min-width: 0; background: radial-gradient(#2c353f 1px, transparent 1.2px) 0 0 / 1.4rem 1.4rem, var(--win); }
+  .track {
+    --ph: 2rem; --g: 1.6rem; --cw: clamp(16rem, calc(100cqh - 2 * var(--ph) - 9rem), 29rem);
+    height: 100%; display: flex; align-items: center; padding: var(--ph) 0; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; cursor: grab;
+    overscroll-behavior-x: contain;
+  }
+  .track::-webkit-scrollbar { display: none; }
+  .track.drag { cursor: grabbing; user-select: none; }
+  .track.drag .card { pointer-events: none; }
+
+  .card {
+    --c: #3fd0bf; flex: 0 0 var(--cw); width: var(--cw); margin-right: var(--g); display: flex; flex-direction: column; text-decoration: none;
+    animation: cardIn .8s var(--ease) backwards; animation-delay: calc(.2s + var(--i, 0) * .1s);
+    padding: .7rem .7rem 1.2rem; background: var(--card); border: 1px solid var(--line-2); border-radius: 1.1rem;
+    box-shadow: 0 .8rem 1.8rem -1rem rgba(0, 0, 0, .6);
+    transition: transform .3s var(--ease), opacity .3s, box-shadow .3s, border-color .3s; -webkit-user-drag: none;
+  }
+  /* Preview: the whole desktop page, with the phone version overlapping it, on a wash of the sample's own colour */
+  .card .pv { position: relative; aspect-ratio: 1 / .72; overflow: hidden; border-radius: .7rem; background: #1a2029; background: linear-gradient(150deg, color-mix(in srgb, var(--c) 32%, #1a2029) 0%, #1a2029 75%); }
+  .pv img { position: absolute; display: block; height: auto; -webkit-user-drag: none; transition: transform .5s var(--ease); }
+  .pv .d { left: 5%; top: 7%; width: 90%; border-radius: .45rem; box-shadow: 0 .7rem 1.5rem -.4rem rgba(0, 0, 0, .65); }
+  /* the phone rises from the bottom edge, so there is no empty strip under the desktop page */
+  .pv .m { right: 5%; top: 32%; width: 26%; border-radius: .85rem; border: .22rem solid #0b0e11; box-shadow: 0 .9rem 1.7rem -.3rem rgba(0, 0, 0, .75); }
+  .card .meta { display: flex; align-items: center; justify-content: space-between; margin: 1rem .5rem 0; font-size: .8rem; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+  .card .type::before { content: ""; display: inline-block; width: .5rem; height: .5rem; margin-right: .5rem; border-radius: 50%; background: var(--c); }
+  .card .num { font: 500 1.9rem/1 var(--display); color: var(--faint); letter-spacing: 0; }
+  .card h3 { margin: .5rem .5rem .2rem; font: 600 1.5rem/1.2 var(--display); letter-spacing: -.015em; }
+  .card .brand { margin: 0 .5rem; font-size: .95rem; color: var(--muted); }
+  @media (hover: hover) {
+    .track:hover .card:not(:hover):not(:focus-visible) { opacity: .55; transform: scale(.975); }
+    .card:hover { transform: translateY(-.5rem); border-color: var(--teal); box-shadow: 0 1.8rem 2.8rem -1.2rem rgba(0, 0, 0, .8), 0 0 0 1px var(--teal); }
+    .card:hover .pv .d { transform: translateY(-.35rem); }
+    .card:hover .pv .m { transform: translateY(-.6rem); }
+  }
+  .card:focus-visible { transform: translateY(-.5rem); border-color: var(--teal); }
+
+  /* Arrows appear at the edges when you hover the row, and only when there is more to see */
+  .nav-btn {
+    position: absolute; top: 50%; z-index: 2; width: 3rem; height: 3rem; margin-top: -1.5rem; border-radius: 50%; cursor: pointer; font-size: 1.2rem; line-height: 1;
+    background: rgba(21, 25, 30, .88); border: 1px solid var(--line-2); opacity: 0; pointer-events: none; transition: opacity .25s, background .2s, color .2s, border-color .2s;
+  }
+  #prev { left: .9rem; } #next { right: .9rem; }
+  .stage.scrolls:hover .nav-btn:not(:disabled), .nav-btn:not(:disabled):focus-visible { opacity: 1; pointer-events: auto; }
+  .nav-btn:hover { background: var(--teal); color: var(--on-teal); border-color: var(--teal); }
+  @media (hover: none) { .nav-btn { display: none; } }
+
+  /* Preview: nearly the whole window */
+  .viewer {
+    position: absolute; left: 0; right: 0; top: 2.75rem; bottom: 0; z-index: 5; display: grid; grid-template-columns: var(--side) minmax(0, 1fr);
+    background: var(--win); opacity: 0; visibility: hidden; transform: translateY(1.5rem);
+    transition: opacity .35s ease, transform .5s var(--ease), visibility 0s .5s;
+  }
+  .viewer.open { opacity: 1; visibility: visible; transform: none; transition: opacity .35s ease, transform .5s var(--ease); }
+
+  .vinfo { display: flex; flex-direction: column; gap: 1.1rem; padding: 2rem 1.9rem 1.6rem; border-right: 1px solid var(--line); overflow-y: auto; scrollbar-width: thin; }
+  .vinfo h2 { margin: -.4rem 0 0; font: 600 2.2rem/1.12 var(--display); letter-spacing: -.02em; }
+  .vinfo .brand { margin: -.7rem 0 0; color: var(--teal); font-size: .95rem; font-weight: 500; }
+  .vinfo .desc { margin: 0; color: var(--muted); }
+  .vinfo .with { margin: 0; font-size: .85rem; color: var(--faint); }
+  .vinfo .with b { color: var(--muted); font-weight: 500; }
+
+  /* The pages, listed like the genre list in the video: numbered rows with dotted lines */
+  .rows { display: flex; flex-direction: column; margin-top: .3rem; }
+  .row {
+    position: relative; display: grid; grid-template-columns: 2.2rem 1fr; align-items: baseline; gap: 0 .4rem; text-align: left; cursor: pointer;
+    padding: .8rem .2rem .8rem .7rem; background: none; border: 0; border-top: 1px dotted var(--line-2); transition: background .25s, padding .25s;
+  }
+  .row:last-child { border-bottom: 1px dotted var(--line-2); }
+  .row .n { font-size: .78rem; color: var(--faint); }
+  .row b { font: 500 1.25rem/1.25 var(--display); letter-spacing: -.01em; color: var(--muted); transition: color .25s; }
+  .row small { grid-column: 2; font-size: .82rem; color: var(--faint); display: none; }
+  .row::before { content: ""; position: absolute; left: 0; top: .7rem; bottom: .7rem; width: 3px; border-radius: 3px; background: var(--teal); transform: scaleY(0); transition: transform .3s var(--ease); }
+  .row:hover b { color: var(--text); }
+  .row[aria-pressed="true"] b { color: var(--teal); }
+  .row[aria-pressed="true"] small { display: block; color: var(--muted); }
+  .row[aria-pressed="true"]::before { transform: scaleY(1); }
+  .vinfo .fine { margin-top: auto; }
+
+  .vstage { display: grid; grid-template-rows: 3.9rem minmax(0, 1fr); min-width: 0; background: radial-gradient(#2c353f 1px, transparent 1.2px) 0 0 / 1.4rem 1.4rem, var(--win); }
+  .vtop { display: flex; align-items: center; gap: .8rem; padding: 0 1.2rem 0 1.6rem; }
+  .vtop .crumb { flex: 1; min-width: 0; font-size: .88rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .seg { display: inline-flex; padding: .2rem; gap: .2rem; border-radius: 999px; background: var(--win-2); border: 1px solid var(--line-2); }
+  .seg button { display: inline-flex; align-items: center; gap: .45rem; cursor: pointer; font-size: .88rem; font-weight: 500; padding: .4rem .95rem; border-radius: 999px; background: none; border: 0; color: var(--muted); transition: background .2s, color .2s; }
+  .seg button:hover { color: var(--text); }
+  .seg button[aria-pressed="true"] { background: var(--card); color: var(--teal); box-shadow: 0 0 0 1px var(--line-2); }
+  .seg svg { width: 1.05em; height: 1.05em; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .full {
+    display: inline-flex; align-items: center; gap: .5rem; text-decoration: none; font-size: .88rem; font-weight: 700; white-space: nowrap;
+    padding: .55rem 1.1rem; border-radius: 999px; background: var(--teal); color: var(--on-teal); transition: background .2s, transform .2s;
+  }
+  .full:hover { background: #7ae6d9; transform: translateY(-1px); }
+  .full svg { width: 1em; height: 1em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .x { flex: none; width: 2.4rem; height: 2.4rem; border-radius: 50%; cursor: pointer; font-size: 1.4rem; line-height: 1; background: var(--card); border: 1px solid var(--line-2); transition: background .2s, color .2s; }
+  .x:hover { background: var(--text); color: var(--win-2); border-color: var(--text); }
+
+  .vframe { display: flex; justify-content: center; min-height: 0; padding: 0 1.6rem 1.6rem; }
+  .dev { width: 100%; height: 100%; overflow: hidden; background: #fff; border: 1px solid var(--line-2); border-radius: .8rem; box-shadow: 0 1.5rem 3rem -1.5rem rgba(0, 0, 0, .7); transition: width .45s var(--ease), border-radius .45s var(--ease), padding .45s var(--ease), background .3s; }
+  .dev iframe { display: block; width: 100%; height: 100%; border: 0; background: #fff; }
+  /* The phone view is a real 390 px wide frame, so the sample's own phone layout shows. */
+  .vframe[data-d="mobile"] .dev { width: 416px; max-width: 100%; height: min(100%, 880px); padding: 12px; background: #0b0e11; border: 1px solid var(--line-2); border-radius: 42px; }
+  .vframe[data-d="mobile"] .dev iframe { border-radius: 30px; }
+
+  .side, .vinfo { scrollbar-color: var(--line-2) transparent; }
+  .side.tight .list { display: none; }
+  @media (max-height: 640px) and (min-width: 861px) {
+    .side { padding-top: 1.2rem; gap: .8rem; }
+    .side img { width: 3.2rem; height: 3.2rem; margin-bottom: .5rem; }
+  }
+
+  /* Phones and narrow windows */
+  @media (max-width: 860px) {
+    :root { --gap: 10px; }
+    html { font-size: 15px; }
+    /* Narrow and tall (phone, or a desktop window dragged narrow): the window fits its content instead of stretching to the full height */
+    .window { height: auto; max-height: calc(100vh - 20px); max-height: calc(100dvh - 20px); border-radius: 1.1rem; grid-template-rows: 2.5rem auto; }
+    .stage { container-type: normal; }
+    .chrome { grid-template-columns: 1fr auto; }
+    .dots { display: none; }
+    .chrome .title { justify-self: start; }
+    .body { grid-template-columns: 1fr; grid-template-rows: auto auto; }
+    .side { display: grid; grid-template-columns: auto 1fr; column-gap: .9rem; row-gap: .5rem; align-items: center; padding: .9rem 1rem .8rem; border-right: 0; border-bottom: 1px solid var(--line); overflow: visible; }
+    .side .me { display: contents; }
+    .side img { grid-row: 1 / 3; width: 3.2rem; height: 3.2rem; margin: 0; }
+    .side .kicker, .side .list, .side .fine { display: none; }
+    .side h1 { font-size: 1.6rem; align-self: end; margin: 0; }
+    .side .role { align-self: start; margin: 0; font-size: .82rem; }
+    .side .intro-text { grid-column: 1 / -1; font-size: .92rem; }
+    .track { --ph: 1.2rem; --cw: min(80vw, 340px); height: auto; padding-inline: 1rem; scroll-padding-inline: 1rem; }
+    .viewer { top: 2.5rem; grid-template-columns: 1fr; grid-template-rows: auto auto minmax(0, 1fr); }
+    .vstage { display: contents; }
+    .vtop { order: 1; padding: .5rem .75rem .5rem 1rem; }
+    .vtop .seg, .vtop .full span { display: none; }
+    .full { padding: .6rem; }
+    .vinfo { order: 2; padding: 0 1rem .6rem; gap: 0; border-right: 0; border-bottom: 1px solid var(--line); overflow: visible; }
+    .vinfo > :not(.rows) { display: none; }
+    .rows { flex-direction: row; gap: .4rem; margin: 0; overflow-x: auto; scrollbar-width: none; }
+    .row { flex: none; display: block; padding: .4rem .95rem; border: 1px solid var(--line-2) !important; border-radius: 999px; }
+    .row::before, .row .n, .row small { display: none !important; }
+    .row b { font: 500 .9rem var(--sans); }
+    .row[aria-pressed="true"] { background: var(--teal); border-color: var(--teal) !important; }
+    .row[aria-pressed="true"] b { color: var(--on-teal); }
+    .vframe { order: 3; padding: 0; }
+    .dev, .vframe[data-d="mobile"] .dev { width: 100%; max-width: none; height: 100%; padding: 0; border: 0; border-radius: 0 0 1.1rem 1.1rem; box-shadow: none; background: #fff; }
+    .vframe[data-d="mobile"] .dev iframe { border-radius: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: .01ms !important; transition-delay: 0s !important; animation: none !important; }
+    .track { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+<div class="backdrop" aria-hidden="true"></div>
+
+<main class="window" id="win">
+  <div class="chrome">
+    <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    <span class="title">Work Samples</span>
+    <a href="https://www.linkedin.com/in/ejlimarag" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+
+  <div class="body" id="mainBody">
+    <aside class="side">
+      <div class="me">
+        <img src="Nubicetus_Avatar.png" alt="Pixel art whale flying over clouds" width="74" height="74">
+        <p class="kicker">Portfolio</p>
+        <h1>E. Jethro Limarag</h1>
+        <p class="role">Campaign Coordinator | Landing Page Builder</p>
+      </div>
+      <p class="intro-text">I build advertorial landing pages for native ad campaigns. These samples are for made-up brands. Each has an article, an offer page and a legal page, on desktop and mobile.</p>
+      <ul class="list">
+        <li class="kicker">What I Do</li>
+        <li>Campaign Coordination</li>
+        <li>Landing Page and Funnel Building</li>
+        <li>Native Ads and Media Buying Support</li>
+        <li>Ad Ops</li>
+      </ul>
+      <p class="fine">All brands, products and offers are fictional. Photos are free-license and credited on each page.</p>
+    </aside>
+
+    <section class="stage" id="stage">
+      <div class="track" id="track" aria-label="Work samples"></div>
+      <button type="button" class="nav-btn" id="prev" aria-label="Previous samples">&larr;</button>
+      <button type="button" class="nav-btn" id="next" aria-label="Next samples">&rarr;</button>
+      <noscript><p style="padding:2rem">This page needs JavaScript. Samples: <a href="01_Sleep_Lamp/">01</a>, <a href="02_Dog_Bowl/">02</a>, <a href="03_Standing_Desk/">03</a>.</p></noscript>
+    </section>
+  </div>
+
+  <div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-label="Sample preview" aria-hidden="true" inert>
+    <aside class="vinfo">
+      <p class="kicker" id="vTag"></p>
+      <h2 id="vTitle"></h2>
+      <p class="brand" id="vBrand"></p>
+      <p class="desc" id="vDesc"></p>
+      <p class="with" id="vWith"></p>
+      <div class="rows" id="vPages"></div>
+      <p class="fine">Fictional brand. Photos are free-license and credited on the page.</p>
+    </aside>
+    <section class="vstage">
+      <div class="vtop">
+        <span class="crumb" id="vUrl"></span>
+        <div class="seg" id="vDevice" role="group" aria-label="View as">
+          <button type="button" data-d="desktop" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>Desktop</button>
+          <button type="button" data-d="mobile" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.2"/><path d="M11 18.5h2"/></svg>Mobile</button>
+        </div>
+        <a class="full" id="vOpen" href="#" target="_blank" rel="noopener" title="Opens the page by itself in a new tab"><span>Open Full Page</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+        <button type="button" class="x" id="vClose" aria-label="Close preview">&times;</button>
+      </div>
+      <div class="vframe" id="vFrameBox" data-d="desktop"><div class="dev"><iframe id="vFrame" title="Sample preview" src="about:blank"></iframe></div></div>
+    </section>
+  </div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // To add a sample later: add one object here, plus a folder with Screenshots/Desktop-Article.jpg.
+  // pages: [button label, file, short hint shown when that page is picked]
+  var SAMPLES = [
+    { id: '01_Sleep_Lamp', num: '01', title: 'Slow Mornings', brand: 'Solenne Rise Sunrise Lamp', type: 'Editorial Article', color: '#818cf8',
+      desc: 'A quiet, dark article that reads like a magazine piece, then leads to the offer.',
+      chips: ['Sticky sidebar', 'Quiz', 'Charts', 'Exit-intent offer'],
+      pages: [['Article', 'index.html', 'Scroll it. Take the quiz and watch the charts.'],
+              ['Offer', 'Offer.html', 'Pick a bundle. Try the code RISE10.'],
+              ['Legal', 'Legal.html', 'Terms, privacy and disclosures.'],
+              ['Exit Popup', 'index.html#exit', 'The offer a reader gets when about to leave.']] },
+    { id: '02_Dog_Bowl', num: '02', title: 'The Good Pup Journal', brand: 'Pace Maze Bowl', type: 'Listicle', color: '#2563eb',
+      desc: 'A loud, color-block listicle for dog owners, with the product compared against the usual options.',
+      chips: ['Comparison table', 'Chart', 'Sticky bottom bar', 'Spin wheel'],
+      pages: [['Article', 'index.html', 'Play the tap game. Check the comparison table.'],
+              ['Offer', 'Offer.html', 'Pick a bundle. Try the code PACE10.'],
+              ['Legal', 'Legal.html', 'Terms, privacy and disclosures.'],
+              ['Spin Wheel', 'index.html#spin', 'Spin for a discount code.']] },
+    { id: '03_Standing_Desk', num: '03', title: 'Better Workday', brand: 'Kinlo Rise Desk', type: 'Explainer', color: '#14b8a6',
+      desc: 'A calm, light explainer on sitting less at work, with an interactive calculator and no popups.',
+      chips: ['Standing-time calculator', 'FAQ', 'No popups'],
+      pages: [['Article', 'index.html', 'Try the standing-time calculator.'],
+              ['Offer', 'Offer.html', 'Pick a bundle. Try the code WORKDAY10.'],
+              ['Legal', 'Legal.html', 'Terms, privacy and disclosures.']] }
+  ];
+
+  var $ = function (s) { return document.querySelector(s); };
+  var track = $('#track'), stage = $('#stage');
+  var viewer = $('#viewer'), frame = $('#vFrame'), frameBox = $('#vFrameBox'), mainBody = $('#mainBody');
+  var prev = $('#prev'), next = $('#next');
+  var baseTitle = document.title, byId = {};
+  var cur = null, device = 'desktop', openedByUs = false, lastCard = null, blankTimer = 0;
+
+  // Cards
+  var cards = [];
+  SAMPLES.forEach(function (s, i) {
+    byId[s.id] = s;
+    var a = document.createElement('a');
+    a.className = 'card'; a.href = '#' + s.id; a.draggable = false; a.dataset.i = i;
+    a.style.setProperty('--c', s.color); a.style.setProperty('--i', i);
+    a.innerHTML =
+      '<div class="pv"><img class="d" src="' + s.id + '/Screenshots/Desktop-Article.jpg" alt="" draggable="false" width="1200" height="750">' +
+      '<img class="m" src="' + s.id + '/Screenshots/Mobile-Article.jpg" alt="" draggable="false" width="390" height="975"></div>' +
+      '<div class="meta"><span class="type">' + s.type + '</span><span class="num">' + s.num + '</span></div>' +
+      '<h3>' + s.title + '</h3><p class="brand">' + s.brand + '</p>';
+    a.setAttribute('aria-label', s.num + ', ' + s.title + ', ' + s.type);
+    track.appendChild(a); cards.push(a);
+  });
+  track.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a.card');
+    if (a) { openedByUs = true; lastCard = cards[+a.dataset.i]; }
+  });
+
+  // The row drifts on its own and loops: the set of cards is repeated, and when the scroll position passes
+  // one set it jumps back by exactly one set. Drag, wheel and arrows take over; it resumes shortly after.
+  var AUTO = 1.7;                      // drift speed in rem per second; positive moves the cards left, negative moves them right
+  var x = 0, setW = 0, glideTo = null, lastSet = 0, hovering = false, userAt = 0, tPrev = 0;
+  var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var rem = function () { return parseFloat(getComputedStyle(document.documentElement).fontSize) || 16; };
+  function build() {
+    var frac = setW ? (((x % setW) + setW) % setW) / setW : 0;
+    track.querySelectorAll('.clone').forEach(function (n) { n.remove(); });
+    var first = cards[0], last = cards[cards.length - 1];
+    setW = last.offsetLeft + last.offsetWidth + parseFloat(getComputedStyle(last).marginRight) - first.offsetLeft;
+    var sets = Math.max(3, Math.ceil(track.clientWidth / setW) + 2);
+    for (var k = 1; k < sets; k++) cards.forEach(function (c) {
+      var n = c.cloneNode(true); n.classList.add('clone'); n.setAttribute('aria-hidden', 'true'); n.tabIndex = -1; track.appendChild(n);
+    });
+    x = setW * (1 + frac); glideTo = null; track.scrollLeft = x; lastSet = track.scrollLeft;
+    stage.classList.add('scrolls');
+  }
+  function wrap() {
+    var sh = 0;
+    if (x >= 2 * setW) sh = -setW; else if (x < setW) sh = setW;
+    if (sh) { x += sh; if (glideTo !== null) glideTo += sh; }
+    return sh;
+  }
+  function autoOk() { return !still && !hovering && !down && !cur && performance.now() - userAt > 1200; }
+  function loop(t) {
+    var dt = Math.min(250, t - tPrev) / 1000; tPrev = t;
+    var native = performance.now() - userAt < 1200 && glideTo === null && !down;  // a touch swipe: follow it, don't fight it
+    if (native) x = track.scrollLeft;
+    else if (glideTo !== null) {
+      var d = glideTo - x;
+      if (still || Math.abs(d) < .5) { x = glideTo; glideTo = null; } else x += d * Math.min(1, dt * 9);
+    } else if (autoOk()) x += AUTO * rem() * dt;
+    var sh = wrap();
+    if (!native || sh) track.scrollLeft = x;
+    lastSet = track.scrollLeft;
+    requestAnimationFrame(loop);
+  }
+
+  var down = false, moved = false, startX = 0, startL = 0;
+  track.addEventListener('pointerdown', function (e) {
+    if (e.pointerType !== 'mouse' || e.button !== 0) return;
+    down = true; moved = false; startX = e.clientX; startL = x; glideTo = null;
+  });
+  window.addEventListener('pointermove', function (e) {
+    if (!down) return;
+    var dx = e.clientX - startX;
+    if (!moved && Math.abs(dx) > 5) { moved = true; track.classList.add('drag'); }
+    if (moved) { x = startL - dx; userAt = performance.now(); }
+  });
+  window.addEventListener('pointerup', function () { if (down) userAt = performance.now(); down = false; track.classList.remove('drag'); });
+  track.addEventListener('click', function (e) { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
+  track.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') hovering = true; });
+  track.addEventListener('pointerleave', function () { hovering = false; });
+  track.addEventListener('focusin', function () { hovering = true; });
+  track.addEventListener('focusout', function () { hovering = false; });
+  track.addEventListener('scroll', function () { if (Math.abs(track.scrollLeft - lastSet) > 2) userAt = performance.now(); }, { passive: true });
+  track.addEventListener('wheel', function (e) {
+    var d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    if (e.deltaMode === 1) d *= 18; else if (e.deltaMode === 2) d *= track.clientWidth;
+    e.preventDefault(); userAt = performance.now(); glideTo = (glideTo !== null ? glideTo : x) + d * 1.3;
+  }, { passive: false });
+  function step(dir) { userAt = performance.now(); glideTo = (glideTo !== null ? glideTo : x) + dir * setW / cards.length; }
+  prev.addEventListener('click', function () { step(-1); });
+  next.addEventListener('click', function () { step(1); });
+
+  // The home window is as short as it can be, but never shorter than the left column needs (--need, measured here)
+  var side = $('.side'), win = $('#win');
+  function need() {
+    var cs = getComputedStyle(side), kids = Array.prototype.filter.call(side.children, function (n) { return n.offsetParent !== null; });
+    var h = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom) + Math.max(0, kids.length - 1) * (parseFloat(cs.rowGap) || 0);
+    kids.forEach(function (n) { h += n.offsetHeight; });
+    return Math.ceil(h + 2.75 * rem() + 6);
+  }
+  function fit() {
+    if (window.innerWidth <= 860) { side.classList.remove('tight'); return; }
+    var avail = window.innerHeight - 2 * Math.max(12, Math.min(40, window.innerWidth * .02));
+    side.classList.remove('tight');
+    var n = need();
+    if (n > avail) { side.classList.add('tight'); n = need(); }   // short screen: drop the What I Do list
+    win.style.setProperty('--need', n + 'px');
+  }
+  fit(); window.addEventListener('resize', fit); window.addEventListener('load', fit);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+
+  // Rebuild only when the card size or the row width really changed (zoom, window size, or the window growing)
+  var rt = 0, lastCW = 0;
+  function measure() { var l = cards[cards.length - 1], f = cards[0]; return l.offsetLeft + l.offsetWidth + parseFloat(getComputedStyle(l).marginRight) - f.offsetLeft; }
+  function refresh() { if (setW && Math.abs(measure() - setW) < 1 && track.clientWidth === lastCW) return; build(); lastCW = track.clientWidth; }
+  build(); lastCW = track.clientWidth;
+  if (window.ResizeObserver) new ResizeObserver(function () { clearTimeout(rt); rt = setTimeout(refresh, 150); }).observe(stage);
+  else window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(refresh, 150); });
+  window.addEventListener('load', refresh);
+  requestAnimationFrame(function (t) { tPrev = t; loop(t); });
+
+  // Preview
+  function setDevice(d) {
+    device = d; frameBox.setAttribute('data-d', d);
+    document.querySelectorAll('#vDevice button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.d === d)); });
+  }
+  document.querySelectorAll('#vDevice button').forEach(function (b) { b.addEventListener('click', function () { setDevice(b.dataset.d); }); });
+
+  function mark(idx) {
+    document.querySelectorAll('#vPages .row').forEach(function (b, i) { b.setAttribute('aria-pressed', String(i === idx)); });
+    $('#vUrl').textContent = cur.title + '  /  ' + cur.pages[idx][0];
+    $('#vOpen').href = cur.id + '/' + cur.pages[idx][1];
+  }
+
+  function loadPage(idx) {
+    var url = cur.id + '/' + cur.pages[idx][1];
+    mark(idx);
+    var abs = new URL(url, location.href).href, now = '';
+    try { now = frame.contentWindow.location.href.split('#')[0]; } catch (e) {}
+    if (now === abs.split('#')[0]) {
+      // Same page, different #demo: a fragment change would not reload it, so go via a blank page and wait for it to finish
+      frame.addEventListener('load', function once() { frame.removeEventListener('load', once); nav(abs); });
+      nav('about:blank');
+    } else nav(abs);
+  }
+
+  // The frame is moved with location.replace so it never adds browser-history entries:
+  // the mouse Back button then closes the preview instead of stepping through its pages.
+  function nav(url) { try { frame.contentWindow.location.replace(url); } catch (e) { frame.src = url; } }
+
+  function syncFromFrame() {
+    if (!cur) return;
+    var win, doc;
+    try { win = frame.contentWindow; doc = win.document; if (win.location.href === 'about:blank') return; } catch (e) { return; }
+    if (!doc.__ws) {
+      doc.__ws = true;
+      doc.addEventListener('click', function (e) {
+        var a = e.target.closest && e.target.closest('a[href]');
+        if (!a || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || (a.target && a.target !== '_self')) return;
+        var u = new URL(a.href, win.location.href);
+        if (u.origin !== location.origin || (u.pathname === win.location.pathname && u.hash)) return;
+        e.preventDefault(); win.location.replace(u.href);
+      });
+    }
+    var file = decodeURIComponent(win.location.pathname.split('/').pop() || 'index.html'), full = file + win.location.hash, idx = -1;
+    cur.pages.forEach(function (p, i) { if (p[1] === full) idx = i; });
+    if (idx < 0) cur.pages.forEach(function (p, i) { if (idx < 0 && p[1] === file) idx = i; });
+    if (idx >= 0) mark(idx);
+  }
+  frame.addEventListener('load', syncFromFrame);
+
+  function show(s) {
+    clearTimeout(blankTimer);
+    cur = s;
+    $('#vTag').textContent = s.num + ' · ' + s.type;
+    $('#vTitle').textContent = s.title;
+    $('#vBrand').textContent = s.brand;
+    $('#vDesc').textContent = s.desc;
+    $('#vWith').innerHTML = '<b>Includes:</b> ' + s.chips.join(' · ');
+    var rows = $('#vPages'); rows.innerHTML = '';
+    s.pages.forEach(function (p, i) {
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'row';
+      b.innerHTML = '<span class="n">(' + ('0' + (i + 1)).slice(-2) + ')</span><b>' + p[0] + '</b><small>' + p[2] + '</small>';
+      b.addEventListener('click', function () { loadPage(i); });
+      rows.appendChild(b);
+    });
+    setDevice(device);
+    loadPage(0);
+    document.body.classList.add('sample-open');
+    viewer.classList.add('open'); viewer.inert = false; viewer.setAttribute('aria-hidden', 'false');
+    mainBody.inert = true;
+    document.title = s.title + ' - ' + baseTitle;
+    setTimeout(function () { $('#vClose').focus({ preventScroll: true }); }, 60);
+  }
+
+  function hide() {
+    document.body.classList.remove('sample-open');
+    viewer.classList.remove('open'); viewer.inert = true; viewer.setAttribute('aria-hidden', 'true');
+    mainBody.inert = false; cur = null; openedByUs = false;
+    document.title = baseTitle;
+    blankTimer = setTimeout(function () { nav('about:blank'); }, 520);
+    if (lastCard) lastCard.focus({ preventScroll: true });
+  }
+
+  function route() {
+    var s = byId[decodeURIComponent(location.hash.slice(1))];
+    if (s) { if (cur !== s) show(s); }
+    else if (cur) hide();
+  }
+  window.addEventListener('hashchange', route);
+
+  function close() {
+    if (openedByUs) history.back();
+    else { history.replaceState(null, '', location.pathname + location.search); route(); }
+  }
+  $('#vClose').addEventListener('click', close);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && cur) close(); });
+
+  route();
+})();
+</script>
+</body>
+</html>
